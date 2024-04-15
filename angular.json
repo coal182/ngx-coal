@@ -44,6 +44,119 @@
           }
         }
       }
+    },
+    "ngx-coal-tester": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/ngx-coal-tester",
+      "sourceRoot": "projects/ngx-coal-tester/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/ngx-coal-tester",
+            "index": "projects/ngx-coal-tester/src/index.html",
+            "main": "projects/ngx-coal-tester/src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "projects/ngx-coal-tester/tsconfig.app.json",
+            "assets": [
+              "projects/ngx-coal-tester/src/favicon.ico",
+              "projects/ngx-coal-tester/src/assets"
+            ],
+            "inlineStyleLanguage": "scss",
+            "styles": [
+              "projects/ngx-coal-tester/src/styles.scss",
+              "projects/ngx-coal-tester/src/theme.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "ngx-coal-tester:build:production"
+            },
+            "development": {
+              "browserTarget": "ngx-coal-tester:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "ngx-coal-tester:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "projects/ngx-coal-tester/tsconfig.spec.json",
+            "assets": [
+              "projects/ngx-coal-tester/src/favicon.ico",
+              "projects/ngx-coal-tester/src/assets"
+            ],
+            "inlineStyleLanguage": "scss",
+            "styles": [
+              "projects/ngx-coal-tester/src/styles.scss",
+              "projects/ngx-coal-tester/src/theme.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ngx-coal-tester/**/*.ts",
+              "projects/ngx-coal-tester/**/*.html"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "style": "scss"
     }
   },
   "cli": {
