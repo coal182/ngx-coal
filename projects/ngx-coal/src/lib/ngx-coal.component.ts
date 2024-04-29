@@ -1,15 +1,7 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
-  selector: 'coal-ngx-coal',
-  template: `
-    <p>
-      ngx-coal works!
-    </p>
-  `,
-  styles: [
-  ]
+    selector: 'coal-ngx-coal',
+    template: '<p>ngx-coal it works!</p>',
 })
-export class NgxCoalComponent {
-
-}
+export class NgxCoalComponent {}
