@@ -21,7 +21,6 @@
     "@angular/platform-browser": "^16.2.12",
     "@angular/platform-browser-dynamic": "^16.2.12",
     "@angular/router": "^16.2.12",
-    "eslint-plugin-html": "^8.1.1",
     "rxjs": "^7.8.1",
     "tslib": "^2.6.2",
     "zone.js": "~0.13.3"
@@ -42,6 +41,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-ban": "^1.6.0",
+    "eslint-plugin-html": "^8.1.1",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-no-floating-promise": "^1.0.2",
     "eslint-plugin-prettier": "^5.1.3",
