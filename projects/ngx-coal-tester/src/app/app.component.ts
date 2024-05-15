@@ -20,6 +20,14 @@ export class AppComponent implements OnDestroy {
             title: 'Star Rating',
             route: 'star-rating',
         },
+        {
+            title: 'Card',
+            route: 'card',
+        },
+        {
+            title: 'Filter Bar',
+            route: 'filter-bar',
+        },
     ];
 
     private _mobileQueryListener: () => void;

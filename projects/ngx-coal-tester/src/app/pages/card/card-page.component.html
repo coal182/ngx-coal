@@ -1,0 +1,32 @@
+<coal-card (cardSave)="onSave()" (cardReset)="onReset()" [showButtons]="!myForm.pristine" [cardStatus]="status$">
+    <ng-container coal-card-title>Title</ng-container>
+    <ng-container coal-card-subtitle>Subtitle</ng-container>
+    <p>Please fill the form and save it</p>
+    <form [formGroup]="myForm">
+        <mat-form-field class="example-full-width">
+            <mat-label>Name</mat-label>
+            <input matInput type="text" formControlName="name" placeholder="Name" />
+        </mat-form-field>
+        <br />
+        <mat-form-field class="example-full-width">
+            <mat-label>Age</mat-label>
+            <input matInput type="number" formControlName="age" placeholder="Age" formControlName="age" />
+        </mat-form-field>
+        <br />
+        <mat-form-field>
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender">
+                <mat-option *ngFor="let gender of genders" [value]="gender.value">
+                    {{ gender.title }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+    <pre>
+    Form value: {{ myForm.value | json }} 
+    Form status: {{ myForm.status }} 
+    Form errors: {{ myForm.errors }} 
+    Form pristine: {{ myForm.pristine }} 
+    Form touched: {{ myForm.touched }}
+    </pre>
+</coal-card>

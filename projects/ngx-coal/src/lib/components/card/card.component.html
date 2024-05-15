@@ -1,0 +1,26 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>
+            <ng-content select="[coal-card-title]"></ng-content>
+        </mat-card-title>
+        <mat-card-subtitle>
+            <ng-content select="[coal-card-subtitle]"></ng-content>
+        </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <ng-content></ng-content>
+    </mat-card-content>
+    <ng-container *ngIf="showButtons">
+        <br />
+        <mat-divider></mat-divider>
+        <mat-card-actions>
+            <button mat-button (click)="reset()" [disabled]="status === 'invalid'">Reset</button>
+            <button mat-button (click)="save()" [disabled]="status === 'invalid'">Save</button>
+            <mat-icon fontIcon="check" *ngIf="status === 'succeeded'"></mat-icon>
+            <mat-icon fontIcon="error" *ngIf="status === 'failed'"></mat-icon>
+        </mat-card-actions>
+        <mat-card-footer *ngIf="status === 'saving'">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </mat-card-footer>
+    </ng-container>
+</mat-card>

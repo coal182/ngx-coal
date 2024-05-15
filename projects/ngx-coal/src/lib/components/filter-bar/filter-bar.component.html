@@ -1,0 +1,13 @@
+<ul>
+    <section *ngFor="let category of filters">
+        <h2>{{ category.title }}</h2>
+
+        <li *ngFor="let filter of category.filters">
+            <mat-checkbox class="example-margin" [(ngModel)]="filter.checked" (ngModelChange)="onChange()">{{
+                filter.title
+            }}</mat-checkbox>
+        </li>
+    </section>
+</ul>
+
+Filters: {{ filters | json }}
