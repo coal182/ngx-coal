@@ -1,18 +1,21 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {Subscription} from 'rxjs';
 
 export interface FilterCategory {
     title: string;
-    filters: ReadonlyArray<Filter>;
+    value: string | number;
+    filters: ReadonlyArray<FilterOption>;
 }
 
-export interface Filter {
+export interface FilterOption {
     title: string;
     value: string | number;
     checked: boolean;
 }
 
-export interface FilterSelection {
-    title: string;
+export interface SelectedFilters {
+    category: string | number;
     selection: ReadonlyArray<string | number>;
 }
 
@@ -20,75 +23,81 @@ export interface FilterSelection {
     selector: 'coal-filter-bar',
     templateUrl: './filter-bar.component.html',
     styleUrls: ['./filter-bar.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FilterBarComponent {
+export class FilterBarComponent implements OnInit, OnDestroy {
     @Input()
-    public filters: ReadonlyArray<FilterCategory> = [
-        {
-            title: 'Brand',
-            filters: [
-                {
-                    title: 'Toyota',
-                    value: 'toyota',
-                    checked: false,
-                },
-                {
-                    title: 'Nissan',
-                    value: 'nissan',
-                    checked: false,
-                },
-                {
-                    title: 'Honda',
-                    value: 'honda',
-                    checked: false,
-                },
-                {
-                    title: 'Subaru',
-                    value: 'subaru',
-                    checked: false,
-                },
-            ],
-        },
-        {
-            title: 'Category',
-            filters: [
-                {
-                    title: 'SUV',
-                    value: 'suv',
-                    checked: false,
-                },
-                {
-                    title: 'Coupe',
-                    value: 'coupe',
-                    checked: false,
-                },
-                {
-                    title: 'Sedan',
-                    value: 'sedan',
-                    checked: false,
-                },
-                {
-                    title: 'Hatchback',
-                    value: 'hatchback',
-                    checked: false,
-                },
-            ],
-        },
-    ];
+    public filterCategories: ReadonlyArray<FilterCategory> = [];
 
     @Output()
-    public filtersSelection = new EventEmitter<ReadonlyArray<FilterSelection>>();
+    public filtersSelection = new EventEmitter<ReadonlyArray<SelectedFilters>>();
+
+    public filterForm: FormGroup;
+
+    private valueChangesSubscription: Subscription;
+
+    public get categoriesFormArray(): FormArray {
+        return this.filterForm.get('categories') as FormArray;
+    }
+
+    public getFiltersFormArray(categoryIndex: number): FormArray {
+        return this.categoriesFormArray.at(categoryIndex).get('filters') as FormArray;
+    }
+
+    public constructor(private fb: FormBuilder) {}
+
+    public ngOnInit(): void {
+        this.initializeForm();
+        this.subscribeToFormChanges();
+    }
+
+    public ngOnDestroy(): void {
+        if (this.valueChangesSubscription) {
+            this.valueChangesSubscription.unsubscribe();
+        }
+    }
 
     public onChange(): void {
-        const selection = this.filters.reduce((acc: ReadonlyArray<FilterSelection>, cur: FilterCategory) => {
-            const checkedFilters = cur.filters.filter((filter) => filter.checked).map((filter) => filter.value);
-            const selection: FilterSelection = {title: cur.title, selection: checkedFilters};
+        const currentSelections = this.filterForm.value.categories.reduce((acc: ReadonlyArray<SelectedFilters>, currentFilterCategory: FilterCategory) => {
+            const checkedFilters = currentFilterCategory.filters.filter((filter) => filter.checked).map((filter) => filter.value);
+            const selection: SelectedFilters = {category: currentFilterCategory.title, selection: checkedFilters};
             if (checkedFilters.length) {
                 return [...acc, selection];
             }
             return acc;
         }, []);
 
-        this.filtersSelection.emit(selection);
+        this.filtersSelection.emit(currentSelections);
+    }
+
+    public trackByIndex(index: number): number {
+        return index;
+    }
+
+    private initializeForm(): void {
+        this.filterForm = this.fb.group({
+            categories: this.fb.array(this.filterCategories.map((category) => this.createCategoryGroup(category))),
+        });
+    }
+
+    private createCategoryGroup(category: FilterCategory): FormGroup {
+        return this.fb.group({
+            title: category.title,
+            filters: this.fb.array(category.filters.map((filter) => this.createFilterGroup(filter))),
+        });
+    }
+
+    private createFilterGroup(filter: FilterOption): FormGroup {
+        return this.fb.group({
+            title: filter.title,
+            value: filter.value,
+            checked: filter.checked,
+        });
+    }
+
+    private subscribeToFormChanges(): void {
+        this.valueChangesSubscription = this.filterForm.valueChanges.subscribe(() => {
+            this.onChange();
+        });
     }
 }

@@ -1,13 +1,18 @@
-<ul>
-    <section *ngFor="let category of filters">
-        <h2>{{ category.title }}</h2>
-
-        <li *ngFor="let filter of category.filters">
-            <mat-checkbox class="example-margin" [(ngModel)]="filter.checked" (ngModelChange)="onChange()">{{
-                filter.title
-            }}</mat-checkbox>
-        </li>
-    </section>
-</ul>
-
-Filters: {{ filters | json }}
+<form [formGroup]="filterForm">
+    <ul formArrayName="categories">
+        <ng-container
+            *ngFor="let categoryGroup of categoriesFormArray.controls; let i = index; trackBy: trackByIndex"
+            [formGroupName]="i">
+            <h4 class="filter-title">{{ categoryGroup.get("title")?.value }}</h4>
+            <ul formArrayName="filters">
+                <li
+                    *ngFor="let filterGroup of getFiltersFormArray(i)?.controls; let j = index; trackBy: trackByIndex"
+                    [formGroupName]="j">
+                    <mat-checkbox class="filter-checkbox" formControlName="checked">
+                        {{ filterGroup.get("title")?.value }}
+                    </mat-checkbox>
+                </li>
+            </ul>
+        </ng-container>
+    </ul>
+</form>

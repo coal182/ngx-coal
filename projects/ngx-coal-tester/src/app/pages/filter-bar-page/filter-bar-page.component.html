@@ -1,3 +1,6 @@
-<coal-filter-bar (filtersSelection)="onFilterSelection($event)"></coal-filter-bar>
+<coal-filter-bar [filterCategories]="filterCategories" (filtersSelection)="onFilterSelection($event)"></coal-filter-bar>
+
 <hr />
 Selection: {{ selection | json }}
+<hr />
+Filters: {{ filterCategories | json }}
