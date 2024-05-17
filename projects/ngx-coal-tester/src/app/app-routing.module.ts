@@ -3,7 +3,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {Routes, RouterModule} from '@angular/router';
 
 import {CardPageComponent} from './pages/card/card-page.component';
-import {FilterBarPageComponent} from './pages/filter-bar-page/filter-bar-page.component';
+import {FilterBarPageComponent} from './pages/filter-bar/filter-bar-page.component';
 import {StarRatingPageComponent} from './pages/star-rating/star-rating-page.component';
 
 const routes: Routes = [
