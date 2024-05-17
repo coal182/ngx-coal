@@ -4,7 +4,7 @@ Angular components library based on Angular Material
 
 ## Demo Tester
 
-Run `cd projects/ngx-coal-tester/ & ng serve` to see a demo of the components
+Run `cd projects/ngx-coal-tester/ & ng serve` to see a demo of the components or try it on [Stackblitz](https://stackblitz.com/edit/angular-cxtvq1).
 
 ## Code scaffolding
 
