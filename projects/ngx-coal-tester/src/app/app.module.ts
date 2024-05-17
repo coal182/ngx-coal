@@ -8,7 +8,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {CardPageComponent} from './pages/card/card-page.component';
-import {FilterBarPageComponent} from './pages/filter-bar-page/filter-bar-page.component';
+import {FilterBarPageComponent} from './pages/filter-bar/filter-bar-page.component';
 import {StarRatingPageComponent} from './pages/star-rating/star-rating-page.component';
 
 import {NgxCoalModule} from '../../../../projects/ngx-coal/src/public-api';
