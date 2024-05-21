@@ -1,19 +1,19 @@
 {
   "name": "ngx-coal",
-  "version": "0.0.8",
+  "version": "1.0.0",
   "peerDependencies": {
-    "@angular/animations": "^16.2.12",
-    "@angular/cdk": "^16.2.14",
-    "@angular/common": "^16.2.12",
-    "@angular/compiler": "^16.2.12",
-    "@angular/core": "^16.2.12",
-    "@angular/forms": "^16.2.12",
-    "@angular/material": "^16.2.14",
-    "@angular/platform-browser": "^16.2.12",
-    "@angular/platform-browser-dynamic": "^16.2.12",
-    "@angular/router": "^16.2.12",
-    "rxjs": "~7.8.0",
-    "zone.js": "~0.13.3"
+    "@angular/animations": "^17.3.9",
+    "@angular/cdk": "^17.3.9",
+    "@angular/common": "^17.3.9",
+    "@angular/compiler": "^17.3.9",
+    "@angular/core": "^17.3.9",
+    "@angular/forms": "^17.3.9",
+    "@angular/material": "^17.3.9",
+    "@angular/platform-browser": "^17.3.9",
+    "@angular/platform-browser-dynamic": "^17.3.9",
+    "@angular/router": "^17.3.9",
+    "rxjs": "~7.8.1",
+    "zone.js": "~0.14.6"
   },
   "dependencies": {
     "tslib": "^2.3.0"

@@ -108,10 +108,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "ngx-coal-tester:build:production"
+              "buildTarget": "ngx-coal-tester:build:production"
             },
             "development": {
-              "browserTarget": "ngx-coal-tester:build:development"
+              "buildTarget": "ngx-coal-tester:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -119,7 +119,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ngx-coal-tester:build"
+            "buildTarget": "ngx-coal-tester:build"
           }
         },
         "test": {
