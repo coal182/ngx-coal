@@ -1,6 +1,16 @@
-<coal-filter-bar [filterCategories]="filterCategories" (filtersSelection)="onFilterSelection($event)"></coal-filter-bar>
+<div class="row">
+    <div class="navbar">
+        <coal-filter-bar
+            [resultsWithFilterableFields]="resultsWithFilterableFields"
+            (filtersSelection)="onFilterSelection($event)"></coal-filter-bar>
+    </div>
+    <div class="cars">
+        <div class="car" *ngFor="let car of cars$ | async">
+            <h3>{{ car.car }}</h3>
+            <pre>{{ car | json }}</pre>
+        </div>
+    </div>
+</div>
 
 <hr />
 Selection: {{ selection | json }}
-<hr />
-Filters: {{ filterCategories | json }}

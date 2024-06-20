@@ -1,0 +1,58 @@
+[
+    {
+        "car": "Toyota Corolla",
+        "brand": "Toyota",
+        "category": "Hatchback",
+        "price": 30000,
+        "color": "red"
+    },
+    {
+        "car": "Toyota Corolla Sedan",
+        "brand": "Toyota",
+        "category": "Sedan",
+        "price": 30000,
+        "color": "black"
+    },
+    {
+        "car": "Toyota CHR",
+        "brand": "Toyota",
+        "category": "SUV",
+        "price": 35000,
+        "color": "yellow"
+    },
+    {
+        "car": "Toyota Supra",
+        "brand": "Toyota",
+        "category": "Coupe",
+        "price": 50000,
+        "color": "white"
+    },
+    {
+        "car": "Nissan Qashqai",
+        "brand": "Nissan",
+        "category": "SUV",
+        "price": 30000,
+        "color": "red"
+    },
+    {
+        "car": "Nissan Skyline",
+        "brand": "Nissan",
+        "category": "Coupe",
+        "price": 50000,
+        "color": "black"
+    },
+    {
+        "car": "Honda Civic",
+        "brand": "Honda",
+        "category": "Sedan",
+        "price": 35000,
+        "color": "blue"
+    },
+    {
+        "car": "Subaru BRZ",
+        "brand": "Subaru",
+        "category": "Coupe",
+        "price": 40000,
+        "color": "white"
+    }
+]

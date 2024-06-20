@@ -1,3 +1,4 @@
+import {HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatListModule} from '@angular/material/list';
@@ -15,7 +16,7 @@ import {NgxCoalModule} from '../../../../projects/ngx-coal/src/public-api';
 
 @NgModule({
     declarations: [AppComponent, StarRatingPageComponent, CardPageComponent, FilterBarPageComponent],
-    imports: [BrowserModule, ReactiveFormsModule, NgxCoalModule, BrowserAnimationsModule, MatSidenavModule, MatListModule, AppRoutingModule],
+    imports: [BrowserModule, ReactiveFormsModule, NgxCoalModule, BrowserAnimationsModule, MatSidenavModule, MatListModule, AppRoutingModule, HttpClientModule],
     providers: [],
     bootstrap: [AppComponent],
 })

@@ -1,4 +1,4 @@
-<form [formGroup]="filterForm">
+<form *ngIf="filterForm" [formGroup]="filterForm">
     <ul formArrayName="categories">
         <ng-container
             *ngFor="let categoryGroup of categoriesFormArray.controls; let i = index; trackBy: trackByIndex"
@@ -10,9 +10,13 @@
                     [formGroupName]="j">
                     <mat-checkbox class="filter-checkbox" formControlName="checked">
                         {{ filterGroup.get("title")?.value }}
+                        <span class="count">({{ filterGroup.get("count")?.value }})</span>
                     </mat-checkbox>
                 </li>
             </ul>
         </ng-container>
     </ul>
 </form>
+<pre>
+    Current Selection {{ currentSelection | json }}
+</pre>
