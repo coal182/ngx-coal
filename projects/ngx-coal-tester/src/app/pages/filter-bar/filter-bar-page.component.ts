@@ -44,12 +44,12 @@ export class FilterBarPageComponent implements OnInit {
     private buildResultsWithFilterableFields(cars: ReadonlyArray<Car>): void {
         this.resultsWithFilterableFields = cars.map((car) => ({
             title: car.car,
-            filterableFields: {
-                [AVAILABLE_FILTER_CATEGORIES[0]]: car[AVAILABLE_FILTER_CATEGORIES[0]],
-                [AVAILABLE_FILTER_CATEGORIES[1]]: car[AVAILABLE_FILTER_CATEGORIES[1]],
-                [AVAILABLE_FILTER_CATEGORIES[2]]: car[AVAILABLE_FILTER_CATEGORIES[2]],
-                [AVAILABLE_FILTER_CATEGORIES[3]]: car[AVAILABLE_FILTER_CATEGORIES[3]],
-            },
+            filterableFields: AVAILABLE_FILTER_CATEGORIES.reduce((filterableFields, filterCategory) => {
+                return {
+                    ...filterableFields,
+                    [filterCategory]: car[filterCategory],
+                };
+            }, {}),
         }));
     }
 
