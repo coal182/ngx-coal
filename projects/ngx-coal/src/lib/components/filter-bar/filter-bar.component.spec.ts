@@ -3,7 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 
-import {FilterBarComponent, FilterCategory} from './filter-bar.component';
+import {FilterBarComponent, ResultWithFilterableFields} from './filter-bar.component';
 
 import {MaterialModule} from '../../shared/material.module';
 
@@ -25,57 +25,48 @@ describe(FilterBarComponent.name, () => {
     it('should render category titles', () => {
         const filterTitles = fixture.debugElement.queryAll(By.css('.filter-title'));
         expect(filterTitles.length).toBe(2);
-        expect(filterTitles[0].nativeElement.textContent).toContain('Brand');
-        expect(filterTitles[1].nativeElement.textContent).toContain('Category');
+        expect(filterTitles[0].nativeElement.textContent).toContain('brand');
+        expect(filterTitles[1].nativeElement.textContent).toContain('category');
     });
 
     describe('when click on a filter', () => {
         beforeEach(() => clickOnFilter(0));
 
-        it('should update form when selecting filters', () => {
+        it('should update form when selecting filters filtering the other category', () => {
             expect(filterBarComponent.filterForm.value).toEqual({
                 categories: [
                     {
-                        title: 'Brand',
+                        title: 'brand',
                         filters: [
-                            {title: 'Toyota', value: 'toyota', checked: true},
-                            {title: 'Nissan', value: 'nissan', checked: false},
+                            {title: 'Toyota', value: 'Toyota', checked: true, count: 1},
+                            {title: 'Nissan', value: 'Nissan', checked: false, count: 1},
                         ],
                     },
                     {
-                        title: 'Category',
-                        filters: [
-                            {title: 'SUV', value: 'suv', checked: false},
-                            {title: 'Coupe', value: 'coupe', checked: false},
-                        ],
+                        title: 'category',
+                        filters: [{title: 'SUV', value: 'SUV', checked: false, count: 1}],
                     },
                 ],
             });
         });
 
         it('should emit the selection', () => {
-            expect(component.onFilterSelection).toHaveBeenCalledWith([{category: 'Brand', selection: ['toyota']}]);
+            expect(component.onFilterSelection).toHaveBeenCalledWith([{category: 'brand', selection: ['Toyota']}]);
         });
 
         describe('and click on another filter', () => {
             beforeEach(() => clickOnFilter(2));
 
-            it('should update form when selecting filters', () => {
+            it('should update form when selecting filters filtering the other category', () => {
                 expect(filterBarComponent.filterForm.value).toEqual({
                     categories: [
                         {
-                            title: 'Brand',
-                            filters: [
-                                {title: 'Toyota', value: 'toyota', checked: true},
-                                {title: 'Nissan', value: 'nissan', checked: false},
-                            ],
+                            title: 'brand',
+                            filters: [{title: 'Toyota', value: 'Toyota', checked: true, count: 1}],
                         },
                         {
-                            title: 'Category',
-                            filters: [
-                                {title: 'SUV', value: 'suv', checked: true},
-                                {title: 'Coupe', value: 'coupe', checked: false},
-                            ],
+                            title: 'category',
+                            filters: [{title: 'SUV', value: 'SUV', checked: true, count: 1}],
                         },
                     ],
                 });
@@ -84,8 +75,8 @@ describe(FilterBarComponent.name, () => {
             it('should emit the selection with both filters', () => {
                 expect(component.onFilterSelection).toHaveBeenCalledTimes(2);
                 expect(component.onFilterSelection).toHaveBeenCalledWith([
-                    {category: 'Brand', selection: ['toyota']},
-                    {category: 'Category', selection: ['suv']},
+                    {category: 'brand', selection: ['Toyota']},
+                    {category: 'category', selection: ['SUV']},
                 ]);
             });
 
@@ -96,17 +87,14 @@ describe(FilterBarComponent.name, () => {
                     expect(filterBarComponent.filterForm.value).toEqual({
                         categories: [
                             {
-                                title: 'Brand',
-                                filters: [
-                                    {title: 'Toyota', value: 'toyota', checked: false},
-                                    {title: 'Nissan', value: 'nissan', checked: false},
-                                ],
+                                title: 'brand',
+                                filters: [{title: 'Toyota', value: 'Toyota', checked: false, count: 1}],
                             },
                             {
-                                title: 'Category',
+                                title: 'category',
                                 filters: [
-                                    {title: 'SUV', value: 'suv', checked: true},
-                                    {title: 'Coupe', value: 'coupe', checked: false},
+                                    {title: 'SUV', value: 'SUV', checked: true, count: 1},
+                                    {title: 'Coupe', value: 'Coupe', checked: false, count: 1},
                                 ],
                             },
                         ],
@@ -115,7 +103,7 @@ describe(FilterBarComponent.name, () => {
 
                 it('should emit the selection with only the last selected filter', () => {
                     expect(component.onFilterSelection).toHaveBeenCalledTimes(3);
-                    expect(component.onFilterSelection).toHaveBeenCalledWith([{category: 'Category', selection: ['suv']}]);
+                    expect(component.onFilterSelection).toHaveBeenCalledWith([{category: 'category', selection: ['SUV']}]);
                 });
             });
         });
@@ -123,6 +111,7 @@ describe(FilterBarComponent.name, () => {
 
     function clickOnFilter(index: number): void {
         fixture.debugElement.queryAll(By.css('input[type=checkbox]'))[index].nativeElement.click();
+        fixture.detectChanges();
     }
 
     function initTestingModule(): void {
@@ -138,41 +127,24 @@ describe(FilterBarComponent.name, () => {
     }
 
     @Component({
-        template: '<coal-filter-bar [filterCategories]="filterCategories" (filtersSelection)="onFilterSelection($event)"></coal-filter-bar>',
+        template:
+            '<coal-filter-bar [resultsWithFilterableFields]="resultsWithFilterableFields" (filtersSelection)="onFilterSelection($event)"></coal-filter-bar>',
     })
     class HostTestComponent {
-        public filterCategories: ReadonlyArray<FilterCategory> = [
+        public resultsWithFilterableFields: ReadonlyArray<ResultWithFilterableFields> = [
             {
-                title: 'Brand',
-                value: 'brand',
-                filters: [
-                    {
-                        title: 'Toyota',
-                        value: 'toyota',
-                        checked: false,
-                    },
-                    {
-                        title: 'Nissan',
-                        value: 'nissan',
-                        checked: false,
-                    },
-                ],
+                title: 'Toyota CHR',
+                filterableFields: {
+                    brand: 'Toyota',
+                    category: 'SUV',
+                },
             },
             {
-                title: 'Category',
-                value: 'category',
-                filters: [
-                    {
-                        title: 'SUV',
-                        value: 'suv',
-                        checked: false,
-                    },
-                    {
-                        title: 'Coupe',
-                        value: 'coupe',
-                        checked: false,
-                    },
-                ],
+                title: 'Nissan Skyline',
+                filterableFields: {
+                    brand: 'Nissan',
+                    category: 'Coupe',
+                },
             },
         ];
         public onFilterSelection = jasmine.createSpy();
