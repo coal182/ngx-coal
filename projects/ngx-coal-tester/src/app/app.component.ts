@@ -1,5 +1,9 @@
 import {MediaMatcher} from '@angular/cdk/layout';
 import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
+import {MatListModule} from '@angular/material/list';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {RouterModule, RouterOutlet} from '@angular/router';
+import {MaterialModule} from 'projects/ngx-coal/src/public-api';
 
 interface NavElement {
     title: string;
@@ -7,10 +11,10 @@ interface NavElement {
 }
 
 @Component({
+    imports: [RouterModule, RouterOutlet, MaterialModule, MatSidenavModule, MatListModule],
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    standalone: false
 })
 export class AppComponent implements OnDestroy {
     public title = 'ngx-coal-tester';

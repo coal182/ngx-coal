@@ -1,9 +1,11 @@
+import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Subscription, takeUntil} from 'rxjs';
 
+import {MaterialModule} from '../../shared/material.module';
 import {DestroyNotificatorSubject} from '../../shared/utils';
-import {NumberRange} from '../range-selector/range-selector.component';
+import {NumberRange, RangeSelectorComponent} from '../range-selector/range-selector.component';
 
 export interface ResultWithFilterableFields {
     title: string;
@@ -52,11 +54,11 @@ export interface Selection {
 }
 
 @Component({
+    imports: [RangeSelectorComponent, CommonModule, FormsModule, ReactiveFormsModule, MaterialModule],
     selector: 'coal-filter-bar',
     templateUrl: './filter-bar.component.html',
     styleUrls: ['./filter-bar.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false,
 })
 export class FilterBarComponent implements OnDestroy {
     private valueChangesCategoriesSubscriptions: Array<Subscription> = [];

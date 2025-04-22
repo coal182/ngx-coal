@@ -5,20 +5,20 @@
     </div>
 
     <ul formArrayName="categories">
-        <ng-container
-            *ngFor="let categoryGroup of categoriesFormArray.controls; let i = index; trackBy: trackByIndex"
-            [formGroupName]="i">
-            <h4 class="filter-title">{{ categoryGroup.get("title")?.value }}</h4>
-            <ul formArrayName="filters">
-                <li
-                    *ngFor="let filterGroup of getFiltersFormArray(i)?.controls; let j = index; trackBy: trackByIndex"
-                    [formGroupName]="j">
-                    <mat-checkbox class="filter-checkbox" formControlName="checked">
-                        {{ filterGroup.get("title")?.value }}
-                        <span class="count">({{ filterGroup.get("count")?.value }})</span>
-                    </mat-checkbox>
-                </li>
-            </ul>
-        </ng-container>
+        @for (categoryGroup of categoriesFormArray.controls; track $index; let i = $index) {
+            <ng-container [formGroupName]="i">
+                <h4 class="filter-title">{{ categoryGroup.get("title")?.value }}</h4>
+                <ul formArrayName="filters">
+                    @for (filterGroup of getFiltersFormArray(i).controls; track $index; let j = $index) {
+                        <li [formGroupName]="j">
+                            <mat-checkbox class="filter-checkbox" formControlName="checked">
+                                {{ filterGroup.get("title")?.value }}
+                                <span class="count">({{ filterGroup.get("count")?.value }})</span>
+                            </mat-checkbox>
+                        </li>
+                    }
+                </ul>
+            </ng-container>
+        }
     </ul>
 </form>

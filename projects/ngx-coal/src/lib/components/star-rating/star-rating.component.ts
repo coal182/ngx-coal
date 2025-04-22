@@ -1,7 +1,9 @@
+import {CommonModule} from '@angular/common';
 import {Component, Optional, Self} from '@angular/core';
-import {ControlValueAccessor, NgControl} from '@angular/forms';
+import {ControlValueAccessor, FormsModule, NgControl, ReactiveFormsModule} from '@angular/forms';
 import {noop} from 'rxjs';
 
+import {MaterialModule} from '../../shared/material.module';
 import {NoOp, OnChangeFn} from '../../shared/utils';
 
 type Rating = number;
@@ -12,10 +14,10 @@ export interface RatingStar {
 }
 
 @Component({
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule],
     selector: 'coal-star-rating',
     templateUrl: 'star-rating.component.html',
     styleUrls: ['star-rating.component.css'],
-    standalone: false
 })
 export class StarRatingComponent implements ControlValueAccessor {
     private onChange: OnChangeFn<Rating> = noop;

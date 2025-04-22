@@ -12,12 +12,9 @@
             [fixedInViewport]="mobileQuery.matches"
             fixedTopGap="56">
             <mat-nav-list>
-                <a
-                    mat-list-item
-                    [routerLink]="element.route"
-                    *ngFor="let element of sidenavElements; index as i; first as isFirst"
-                    >{{ element.title }}</a
-                >
+                @for (element of sidenavElements; track $index; let i = $index; let first = $first) {
+                    <a mat-list-item [routerLink]="element.route">{{ element.title }}</a>
+                }
             </mat-nav-list>
         </mat-sidenav>
         <mat-sidenav-content class="main-content">

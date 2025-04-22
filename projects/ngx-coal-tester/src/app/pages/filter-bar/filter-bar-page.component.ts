@@ -1,6 +1,8 @@
+import {AsyncPipe, JsonPipe} from '@angular/common';
 import {HttpClient} from '@angular/common/http';
 import {Component, OnInit} from '@angular/core';
-import {ResultWithFilterableFields, Selection} from 'projects/ngx-coal/src/lib/components/filter-bar/filter-bar.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FilterBarComponent, ResultWithFilterableFields, Selection} from 'projects/ngx-coal/src/lib/components/filter-bar/filter-bar.component';
 import {BehaviorSubject, map, tap} from 'rxjs';
 
 interface Car {
@@ -14,9 +16,9 @@ interface Car {
 const AVAILABLE_FILTER_CATEGORIES = ['brand', 'category', 'color', 'price'] as const;
 
 @Component({
+    imports: [JsonPipe, FormsModule, ReactiveFormsModule, FilterBarComponent, AsyncPipe],
     templateUrl: './filter-bar-page.component.html',
     styleUrls: ['./filter-bar-page.component.scss'],
-    standalone: false,
 })
 export class FilterBarPageComponent implements OnInit {
     public displayedCars$: BehaviorSubject<ReadonlyArray<Car>>;

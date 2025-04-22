@@ -16,9 +16,11 @@
         <mat-form-field>
             <mat-label>Gender</mat-label>
             <mat-select formControlName="gender">
-                <mat-option *ngFor="let gender of genders" [value]="gender.value">
-                    {{ gender.title }}
-                </mat-option>
+                @for (gender of genders; track $index) {
+                    <mat-option [value]="gender.value">
+                        {{ gender.title }}
+                    </mat-option>
+                }
             </mat-select>
         </mat-form-field>
     </form>

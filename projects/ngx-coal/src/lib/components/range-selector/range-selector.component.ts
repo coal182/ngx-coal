@@ -1,7 +1,19 @@
+import {CommonModule} from '@angular/common';
 import {Component, Input, forwardRef} from '@angular/core';
-import {ControlValueAccessor, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator} from '@angular/forms';
+import {
+    ControlValueAccessor,
+    FormControl,
+    FormGroup,
+    FormsModule,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    ReactiveFormsModule,
+    ValidationErrors,
+    Validator,
+} from '@angular/forms';
 import {debounceTime} from 'rxjs';
 
+import {MaterialModule} from '../../shared/material.module';
 import {Nullable, OnChangeFn, noop} from '../../shared/utils';
 
 export interface NumberRange {
@@ -10,6 +22,7 @@ export interface NumberRange {
 }
 
 @Component({
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule],
     selector: 'coal-range-selector',
     templateUrl: './range-selector.component.html',
     styleUrl: './range-selector.component.scss',
@@ -25,7 +38,6 @@ export interface NumberRange {
             multi: true,
         },
     ],
-    standalone: false
 })
 export class RangeSelectorComponent implements ControlValueAccessor, Validator {
     private onChange: OnChangeFn<Partial<Nullable<NumberRange>>> = noop;

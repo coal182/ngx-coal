@@ -1,7 +1,13 @@
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
+import {provideHttpClient} from '@angular/common/http';
+import {provideZoneChangeDetection} from '@angular/core';
+import {bootstrapApplication} from '@angular/platform-browser';
+import {provideAnimations} from '@angular/platform-browser/animations';
+import {provideRouter} from '@angular/router';
 
-import {AppModule} from './app/app.module';
+import {AppComponent} from './app/app.component';
+import {routes} from './app/app.routes';
 
-platformBrowserDynamic()
-    .bootstrapModule(AppModule)
-    .catch((err) => console.error(err));
+bootstrapApplication(AppComponent, {
+    providers: [provideZoneChangeDetection({eventCoalescing: true}), provideRouter(routes), provideAnimations(), provideHttpClient()],
+    // eslint-disable-next-line no-console
+}).catch((err) => console.error(err));

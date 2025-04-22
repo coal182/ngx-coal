@@ -1,5 +1,9 @@
+import {CommonModule} from '@angular/common';
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BehaviorSubject, delayWhen, interval, map, of, pairwise, startWith} from 'rxjs';
+
+import {MaterialModule} from '../../shared/material.module';
 
 export enum CardStatus {
     Idle = 'iddle',
@@ -10,10 +14,10 @@ export enum CardStatus {
 }
 
 @Component({
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule],
     selector: 'coal-card',
     templateUrl: './card.component.html',
     styleUrls: ['./card.component.scss'],
-    standalone: false
 })
 export class CardComponent implements OnInit {
     @Output()

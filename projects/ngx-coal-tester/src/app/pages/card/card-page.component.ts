@@ -1,12 +1,15 @@
+import {JsonPipe} from '@angular/common';
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {CardStatus} from 'projects/ngx-coal/src/lib/components/card/card.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {CardComponent, CardStatus} from 'projects/ngx-coal/src/lib/components/card/card.component';
+import {MaterialModule} from 'projects/ngx-coal/src/public-api';
 import {BehaviorSubject} from 'rxjs';
 
 @Component({
+    imports: [CardComponent, FormsModule, ReactiveFormsModule, JsonPipe, MaterialModule],
     templateUrl: 'card-page.component.html',
     styleUrls: ['card-page.component.scss'],
-    standalone: false
 })
 export class CardPageComponent {
     public status$ = new BehaviorSubject<CardStatus>(CardStatus.Idle);

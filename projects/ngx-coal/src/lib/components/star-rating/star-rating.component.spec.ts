@@ -1,7 +1,6 @@
-import {Component, NO_ERRORS_SCHEMA} from '@angular/core';
+import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
-import {MatIconModule} from '@angular/material/icon';
 import {By} from '@angular/platform-browser';
 
 import {RatingStar, StarRatingComponent} from './star-rating.component';
@@ -91,11 +90,7 @@ describe(StarRatingComponent.name, () => {
     });
 
     function initTestingModule(): void {
-        TestBed.configureTestingModule({
-            declarations: [HostTestComponent, StarRatingComponent],
-            imports: [MatIconModule, ReactiveFormsModule],
-            schemas: [NO_ERRORS_SCHEMA],
-        });
+        TestBed.configureTestingModule({});
 
         fixture = TestBed.createComponent(HostTestComponent);
         component = fixture.componentInstance;
@@ -104,13 +99,13 @@ describe(StarRatingComponent.name, () => {
     }
 
     @Component({
-    template: `
+        imports: [StarRatingComponent, ReactiveFormsModule],
+        template: `
             <form [formGroup]="myForm">
                 <coal-star-rating formControlName="rating"></coal-star-rating>
             </form>
         `,
-    standalone: false
-})
+    })
     class HostTestComponent {
         public myForm: FormGroup;
 

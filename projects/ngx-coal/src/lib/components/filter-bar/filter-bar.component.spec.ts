@@ -1,11 +1,8 @@
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 
 import {FilterBarComponent, ResultWithFilterableFields} from './filter-bar.component';
-
-import {MaterialModule} from '../../shared/material.module';
 
 describe(FilterBarComponent.name, () => {
     let fixture: ComponentFixture<HostTestComponent>;
@@ -117,10 +114,7 @@ describe(FilterBarComponent.name, () => {
     }
 
     function initTestingModule(): void {
-        TestBed.configureTestingModule({
-            declarations: [FilterBarComponent, HostTestComponent],
-            imports: [MaterialModule, ReactiveFormsModule],
-        }).compileComponents();
+        TestBed.configureTestingModule({}).compileComponents();
 
         fixture = TestBed.createComponent(HostTestComponent);
         component = fixture.componentInstance;
@@ -129,9 +123,11 @@ describe(FilterBarComponent.name, () => {
     }
 
     @Component({
-        template:
-            '<coal-filter-bar [resultsWithFilterableFields]="resultsWithFilterableFields" (filtersSelection)="onFilterSelection($event)"></coal-filter-bar>',
-        standalone: false,
+        imports: [FilterBarComponent],
+        template: `<coal-filter-bar
+            [resultsWithFilterableFields]="resultsWithFilterableFields"
+            (filtersSelection)="onFilterSelection($event)"
+        ></coal-filter-bar>`,
     })
     class HostTestComponent {
         public resultsWithFilterableFields: ReadonlyArray<ResultWithFilterableFields> = [
