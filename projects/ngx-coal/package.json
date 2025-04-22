@@ -1,6 +1,6 @@
 {
   "name": "ngx-coal",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "peerDependencies": {
     "@angular/animations": "^19.2.7",
     "@angular/cdk": "^19.2.10",
