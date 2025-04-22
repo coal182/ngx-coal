@@ -1,4 +1,4 @@
-import {HttpClientModule} from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatListModule} from '@angular/material/list';
@@ -14,10 +14,6 @@ import {StarRatingPageComponent} from './pages/star-rating/star-rating-page.comp
 
 import {NgxCoalModule} from '../../../../projects/ngx-coal/src/public-api';
 
-@NgModule({
-    declarations: [AppComponent, StarRatingPageComponent, CardPageComponent, FilterBarPageComponent],
-    imports: [BrowserModule, ReactiveFormsModule, NgxCoalModule, BrowserAnimationsModule, MatSidenavModule, MatListModule, AppRoutingModule, HttpClientModule],
-    providers: [],
-    bootstrap: [AppComponent],
-})
+@NgModule({ declarations: [AppComponent, StarRatingPageComponent, CardPageComponent, FilterBarPageComponent],
+    bootstrap: [AppComponent], imports: [BrowserModule, ReactiveFormsModule, NgxCoalModule, BrowserAnimationsModule, MatSidenavModule, MatListModule, AppRoutingModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule {}
