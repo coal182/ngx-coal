@@ -41,7 +41,7 @@ interface FilterRange {
     to: number;
 }
 
-interface SelectedFilters {
+export interface SelectedFilters {
     category: string;
     selection: ReadonlyArray<string | number>;
 }
