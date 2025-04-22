@@ -56,7 +56,7 @@ export interface Selection {
     templateUrl: './filter-bar.component.html',
     styleUrls: ['./filter-bar.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    standalone: false,
 })
 export class FilterBarComponent implements OnDestroy {
     private valueChangesCategoriesSubscriptions: Array<Subscription> = [];

@@ -51,7 +51,7 @@ describe(FilterBarComponent.name, () => {
         });
 
         it('should emit the selection', () => {
-            expect(component.onFilterSelection).toHaveBeenCalledWith([{category: 'brand', selection: ['Toyota']}]);
+            expect(component.onFilterSelection).toHaveBeenCalledWith({categories: [{category: 'brand', selection: ['Toyota']}]});
         });
 
         describe('and click on another filter', () => {
@@ -74,10 +74,12 @@ describe(FilterBarComponent.name, () => {
 
             it('should emit the selection with both filters', () => {
                 expect(component.onFilterSelection).toHaveBeenCalledTimes(2);
-                expect(component.onFilterSelection).toHaveBeenCalledWith([
-                    {category: 'brand', selection: ['Toyota']},
-                    {category: 'category', selection: ['SUV']},
-                ]);
+                expect(component.onFilterSelection).toHaveBeenCalledWith({
+                    categories: [
+                        {category: 'brand', selection: ['Toyota']},
+                        {category: 'category', selection: ['SUV']},
+                    ],
+                });
             });
 
             describe('and deselect the first filter', () => {
@@ -103,7 +105,7 @@ describe(FilterBarComponent.name, () => {
 
                 it('should emit the selection with only the last selected filter', () => {
                     expect(component.onFilterSelection).toHaveBeenCalledTimes(3);
-                    expect(component.onFilterSelection).toHaveBeenCalledWith([{category: 'category', selection: ['SUV']}]);
+                    expect(component.onFilterSelection).toHaveBeenCalledWith({categories: [{category: 'category', selection: ['SUV']}]});
                 });
             });
         });
@@ -127,9 +129,10 @@ describe(FilterBarComponent.name, () => {
     }
 
     @Component({
-    template: '<coal-filter-bar [resultsWithFilterableFields]="resultsWithFilterableFields" (filtersSelection)="onFilterSelection($event)"></coal-filter-bar>',
-    standalone: false
-})
+        template:
+            '<coal-filter-bar [resultsWithFilterableFields]="resultsWithFilterableFields" (filtersSelection)="onFilterSelection($event)"></coal-filter-bar>',
+        standalone: false,
+    })
     class HostTestComponent {
         public resultsWithFilterableFields: ReadonlyArray<ResultWithFilterableFields> = [
             {

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Component, OnInit} from '@angular/core';
 import {ResultWithFilterableFields, Selection} from 'projects/ngx-coal/src/lib/components/filter-bar/filter-bar.component';
 import {BehaviorSubject, map, tap} from 'rxjs';
@@ -16,7 +16,7 @@ const AVAILABLE_FILTER_CATEGORIES = ['brand', 'category', 'color', 'price'] as c
 @Component({
     templateUrl: './filter-bar-page.component.html',
     styleUrls: ['./filter-bar-page.component.scss'],
-    standalone: false
+    standalone: false,
 })
 export class FilterBarPageComponent implements OnInit {
     public displayedCars$: BehaviorSubject<ReadonlyArray<Car>>;
