@@ -127,9 +127,9 @@ describe(FilterBarComponent.name, () => {
     }
 
     @Component({
-        template:
-            '<coal-filter-bar [resultsWithFilterableFields]="resultsWithFilterableFields" (filtersSelection)="onFilterSelection($event)"></coal-filter-bar>',
-    })
+    template: '<coal-filter-bar [resultsWithFilterableFields]="resultsWithFilterableFields" (filtersSelection)="onFilterSelection($event)"></coal-filter-bar>',
+    standalone: false
+})
     class HostTestComponent {
         public resultsWithFilterableFields: ReadonlyArray<ResultWithFilterableFields> = [
             {

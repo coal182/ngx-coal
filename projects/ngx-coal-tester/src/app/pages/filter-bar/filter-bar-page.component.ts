@@ -16,6 +16,7 @@ const AVAILABLE_FILTER_CATEGORIES = ['brand', 'category', 'color', 'price'] as c
 @Component({
     templateUrl: './filter-bar-page.component.html',
     styleUrls: ['./filter-bar-page.component.scss'],
+    standalone: false
 })
 export class FilterBarPageComponent implements OnInit {
     public displayedCars$: BehaviorSubject<ReadonlyArray<Car>>;

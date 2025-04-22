@@ -15,6 +15,7 @@ export interface RatingStar {
     selector: 'coal-star-rating',
     templateUrl: 'star-rating.component.html',
     styleUrls: ['star-rating.component.css'],
+    standalone: false
 })
 export class StarRatingComponent implements ControlValueAccessor {
     private onChange: OnChangeFn<Rating> = noop;

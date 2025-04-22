@@ -10,6 +10,7 @@ interface NavElement {
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
+    standalone: false
 })
 export class AppComponent implements OnDestroy {
     public title = 'ngx-coal-tester';

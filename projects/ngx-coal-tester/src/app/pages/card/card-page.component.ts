@@ -6,6 +6,7 @@ import {BehaviorSubject} from 'rxjs';
 @Component({
     templateUrl: 'card-page.component.html',
     styleUrls: ['card-page.component.scss'],
+    standalone: false
 })
 export class CardPageComponent {
     public status$ = new BehaviorSubject<CardStatus>(CardStatus.Idle);

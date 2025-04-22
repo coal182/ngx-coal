@@ -104,12 +104,13 @@ describe(StarRatingComponent.name, () => {
     }
 
     @Component({
-        template: `
+    template: `
             <form [formGroup]="myForm">
                 <coal-star-rating formControlName="rating"></coal-star-rating>
             </form>
         `,
-    })
+    standalone: false
+})
     class HostTestComponent {
         public myForm: FormGroup;
 

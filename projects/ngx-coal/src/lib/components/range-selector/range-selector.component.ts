@@ -25,6 +25,7 @@ export interface NumberRange {
             multi: true,
         },
     ],
+    standalone: false
 })
 export class RangeSelectorComponent implements ControlValueAccessor, Validator {
     private onChange: OnChangeFn<Partial<Nullable<NumberRange>>> = noop;

@@ -57,11 +57,12 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/ngx-coal-tester",
+            "outputPath": {
+              "base": "dist/ngx-coal-tester"
+            },
             "index": "projects/ngx-coal-tester/src/index.html",
-            "main": "projects/ngx-coal-tester/src/main.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -75,7 +76,8 @@
               "projects/ngx-coal-tester/src/styles.scss",
               "projects/ngx-coal-tester/src/theme.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "browser": "projects/ngx-coal-tester/src/main.ts"
           },
           "configurations": {
             "production": {
@@ -94,9 +96,7 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
