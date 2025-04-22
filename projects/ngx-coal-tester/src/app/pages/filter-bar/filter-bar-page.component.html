@@ -5,7 +5,7 @@
             (filtersSelection)="onFilterSelection($event)"></coal-filter-bar>
     </div>
     <div class="cars">
-        <div class="car" *ngFor="let car of cars$ | async">
+        <div class="car" *ngFor="let car of displayedCars$ | async">
             <h3>{{ car.car }}</h3>
             <pre>{{ car | json }}</pre>
         </div>

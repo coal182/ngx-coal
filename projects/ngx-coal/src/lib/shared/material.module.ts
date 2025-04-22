@@ -8,6 +8,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatSelectModule} from '@angular/material/select';
+import {MatSliderModule} from '@angular/material/slider';
 import {MatToolbarModule} from '@angular/material/toolbar';
 
 @NgModule({
@@ -21,6 +22,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
         MatSelectModule,
         MatInputModule,
         MatCheckboxModule,
+        MatSliderModule,
     ],
     exports: [
         MatButtonModule,
@@ -33,6 +35,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
         MatInputModule,
         MatToolbarModule,
         MatCheckboxModule,
+        MatSliderModule,
     ],
 })
 export class MaterialModule {}

@@ -1,24 +1,29 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {Subscription} from 'rxjs';
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {Subscription, takeUntil} from 'rxjs';
+
+import {DestroyNotificatorSubject} from '../../shared/utils';
+import {NumberRange} from '../range-selector/range-selector.component';
 
 export interface ResultWithFilterableFields {
     title: string;
     filterableFields: Record<string, string | number>;
 }
 
-export interface FilterCategory {
+type FilterForm = FormGroup<{categories: FormArray<FormGroup<FilterCategoryForm>>; price?: FormControl<FilterRange>}>;
+
+interface FilterCategory {
     title: string;
     value: string;
     filters: ReadonlyArray<FilterOption>;
 }
 
-export interface FilterCategoryForm {
+interface FilterCategoryForm {
     title: FormControl<string>;
     filters: FormArray<FormGroup<FilterOptionForm>>;
 }
 
-export interface FilterOption {
+interface FilterOption {
     title: string;
     value: string | number;
     count: number;
@@ -29,9 +34,21 @@ type FilterOptionForm = {
     [field in keyof FilterOption]: FormControl<FilterOption[field]>;
 };
 
-export interface SelectedFilters<AVAILABLE_FILTER_CATEGORY = string> {
-    category: AVAILABLE_FILTER_CATEGORY;
+interface FilterRange {
+    from: number;
+    to: number;
+}
+
+interface SelectedFilters {
+    category: string;
     selection: ReadonlyArray<string | number>;
+}
+
+type SelectedPrice = NumberRange;
+
+export interface Selection {
+    categories: ReadonlyArray<SelectedFilters>;
+    price?: SelectedPrice | null;
 }
 
 @Component({
@@ -43,10 +60,10 @@ export interface SelectedFilters<AVAILABLE_FILTER_CATEGORY = string> {
 export class FilterBarComponent implements OnDestroy {
     private valueChangesCategoriesSubscriptions: Array<Subscription> = [];
     private _resultsWithFilterableFields: ReadonlyArray<ResultWithFilterableFields> = [];
-
-    public filterForm: FormGroup<{categories: FormArray<FormGroup<FilterCategoryForm>>}>;
-    public currentSelection: ReadonlyArray<SelectedFilters> = [];
-    public lastCategorySelected: string;
+    private onDestroy$ = new DestroyNotificatorSubject();
+    public filterForm: FilterForm;
+    public currentSelection: Selection = {categories: [], price: null};
+    public priceStep = 500;
 
     @Input()
     public set resultsWithFilterableFields(value: ReadonlyArray<ResultWithFilterableFields>) {
@@ -57,7 +74,7 @@ export class FilterBarComponent implements OnDestroy {
     }
 
     @Output()
-    public filtersSelection = new EventEmitter<ReadonlyArray<SelectedFilters>>();
+    public filtersSelection = new EventEmitter<Selection>();
 
     public get categoriesFormArray(): FormArray<FormGroup<FilterCategoryForm>> {
         return (this.filterForm?.get('categories') as FormArray) ?? null;
@@ -70,21 +87,16 @@ export class FilterBarComponent implements OnDestroy {
     public constructor(private fb: FormBuilder) {}
 
     public ngOnDestroy(): void {
-        this.unsubscribeFromFormChanges();
+        this.onDestroy$.notify();
     }
 
     public onChange(): void {
-        this.currentSelection = this.filterForm.getRawValue().categories.reduce<ReadonlyArray<SelectedFilters>>((acc, currentFilterCategory) => {
-            const checkedFilters = currentFilterCategory.filters.filter((filter) => filter.checked).map((filter) => filter.value);
-            const selection: SelectedFilters = {
-                category: currentFilterCategory.title,
-                selection: checkedFilters,
-            };
-            if (checkedFilters.length) {
-                return [...acc, selection];
-            }
-            return acc;
-        }, []);
+        const price = this.filterForm.controls.price?.valid ? this.filterForm.controls.price.value : null;
+
+        this.currentSelection = {
+            categories: this.getCategoriesSelection(),
+            ...(price && {price}),
+        };
 
         this.filtersSelection.emit(this.currentSelection);
 
@@ -98,7 +110,16 @@ export class FilterBarComponent implements OnDestroy {
     private initializeForm(): void {
         this.filterForm = this.fb.group({
             categories: this.fb.array(this.buildFilterCategories().map((category) => this.createCategoryGroup(category))),
+            ...(this.isPriceInFilters() && {
+                price: new FormControl(this.buildPriceFilter(), {nonNullable: true, validators: [Validators.min(0), Validators.max(1000)]}),
+            }),
         });
+
+        if (this.isPriceInFilters()) {
+            this.filterForm.controls.price!.valueChanges.pipe(takeUntil(this.onDestroy$)).subscribe(() => {
+                this.onChange();
+            });
+        }
 
         this.subscribeToFormChanges();
     }
@@ -112,9 +133,10 @@ export class FilterBarComponent implements OnDestroy {
     }
 
     private filterResultsPerCategory(results: ReadonlyArray<ResultWithFilterableFields>, category: string): ReadonlyArray<ResultWithFilterableFields> {
-        if (this.currentSelection.length) {
+        const selectedCategories = this.currentSelection.categories;
+        if (selectedCategories.length) {
             const filteredResults = results.filter((result) => {
-                return this.currentSelection.every((filter) => {
+                return selectedCategories.every((filter) => {
                     return (
                         filter.category === category ||
                         !filter.selection.length ||
@@ -128,7 +150,13 @@ export class FilterBarComponent implements OnDestroy {
     }
 
     private getFilterableFields(results: ReadonlyArray<ResultWithFilterableFields>): ReadonlyArray<string> {
-        return [...new Set(...results.map((result) => Object.keys(result.filterableFields)))];
+        return [...new Set(...results.map((result) => Object.keys(result.filterableFields)))].filter((field) => field !== 'price');
+    }
+
+    private buildPriceFilter(): NumberRange {
+        const prices: ReadonlyArray<number> = this._resultsWithFilterableFields.map((result) => result.filterableFields['price'] as number);
+
+        return {from: Math.min(...prices), to: Math.max(...prices)};
     }
 
     private buildFilterCategories(): ReadonlyArray<FilterCategory> {
@@ -154,7 +182,7 @@ export class FilterBarComponent implements OnDestroy {
                 if (existingFilter) {
                     filterOptions.set(filterCategoryValue.toString(), {...existingFilter, count: existingFilter.count + 1});
                 } else {
-                    const isChecked = this.currentSelection.find(
+                    const isChecked = this.currentSelection.categories.find(
                         (selection) => selection.category === filterCategory && selection.selection.includes(filterCategoryValue),
                     );
                     filterOptions.set(filterCategoryValue.toString(), {
@@ -170,6 +198,13 @@ export class FilterBarComponent implements OnDestroy {
     }
 
     private createCategoryGroup(category: FilterCategory): FormGroup<FilterCategoryForm> {
+        if (category.title === 'price') {
+            return this.fb.group<FilterCategoryForm>({
+                title: this.fb.control(category.title, {nonNullable: true}),
+                filters: this.fb.array(category.filters.map((filter) => this.createFilterGroup(filter))),
+            });
+        }
+
         return this.fb.group<FilterCategoryForm>({
             title: this.fb.control(category.title, {nonNullable: true}),
             filters: this.fb.array(category.filters.map((filter) => this.createFilterGroup(filter))),
@@ -188,7 +223,7 @@ export class FilterBarComponent implements OnDestroy {
     private subscribeToFormChanges(): void {
         this.categoriesFormArray.controls.forEach((filterCategory) => {
             this.valueChangesCategoriesSubscriptions.push(
-                filterCategory.valueChanges.subscribe(() => {
+                filterCategory.valueChanges.pipe(takeUntil(this.onDestroy$)).subscribe(() => {
                     this.onChange();
                 }),
             );
@@ -202,5 +237,23 @@ export class FilterBarComponent implements OnDestroy {
             });
             this.valueChangesCategoriesSubscriptions = [];
         }
+    }
+
+    private getCategoriesSelection(): ReadonlyArray<SelectedFilters> {
+        return this.filterForm.getRawValue().categories.reduce<ReadonlyArray<SelectedFilters>>((acc, currentFilterCategory) => {
+            const checkedFilters = currentFilterCategory.filters.filter((filter) => filter.checked).map((filter) => filter.value);
+            const selection: SelectedFilters = {
+                category: currentFilterCategory.title,
+                selection: checkedFilters,
+            };
+            if (checkedFilters.length) {
+                return [...acc, selection];
+            }
+            return acc;
+        }, []);
+    }
+
+    private isPriceInFilters(): boolean {
+        return !!this._resultsWithFilterableFields[0].filterableFields['price'];
     }
 }

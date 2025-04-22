@@ -1,0 +1,26 @@
+<form [formGroup]="rangeForm">
+    {{ min }}
+    <mat-slider [min]="min" [max]="max" [step]="step">
+        <input formControlName="from" matSliderStartThumb />
+        <input formControlName="to" matSliderEndThumb />
+    </mat-slider>
+    {{ max }}
+    <table>
+        <tr>
+            <td>
+                <mat-form-field [style.width.px]="200">
+                    <mat-label>From</mat-label>
+                    <input [value]="rangeForm.value.from" matInput readonly />
+                    <span matTextSuffix>€</span>
+                </mat-form-field>
+            </td>
+            <td>
+                <mat-form-field [style.width.px]="200">
+                    <mat-label>To</mat-label>
+                    <input [value]="rangeForm.value.to" matInput readonly />
+                    <span matTextSuffix>€</span>
+                </mat-form-field>
+            </td>
+        </tr>
+    </table>
+</form>

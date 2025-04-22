@@ -1,4 +1,9 @@
 <form *ngIf="filterForm" [formGroup]="filterForm">
+    <div *ngIf="filterForm.controls.price">
+        <h4 class="filter-title">Price</h4>
+        <coal-range-selector formControlName="price" [step]="priceStep"></coal-range-selector>
+    </div>
+
     <ul formArrayName="categories">
         <ng-container
             *ngFor="let categoryGroup of categoriesFormArray.controls; let i = index; trackBy: trackByIndex"
@@ -17,6 +22,3 @@
         </ng-container>
     </ul>
 </form>
-<pre>
-    Current Selection {{ currentSelection | json }}
-</pre>
