@@ -1,24 +1,47 @@
-<form *ngIf="filterForm" [formGroup]="filterForm">
-    <div *ngIf="filterForm.controls.price">
-        <h4 class="filter-title">Price</h4>
-        <coal-range-selector formControlName="price" [step]="priceStep"></coal-range-selector>
-    </div>
-
-    <ul formArrayName="categories">
-        @for (categoryGroup of categoriesFormArray.controls; track $index; let i = $index) {
-            <ng-container [formGroupName]="i">
-                <h4 class="filter-title">{{ categoryGroup.get("title")?.value }}</h4>
-                <ul formArrayName="filters">
-                    @for (filterGroup of getFiltersFormArray(i).controls; track $index; let j = $index) {
-                        <li [formGroupName]="j">
-                            <mat-checkbox class="filter-checkbox" formControlName="checked">
-                                {{ filterGroup.get("title")?.value }}
-                                <span class="count">({{ filterGroup.get("count")?.value }})</span>
-                            </mat-checkbox>
-                        </li>
-                    }
-                </ul>
-            </ng-container>
+@if (filterForm) {
+    <form [formGroup]="filterForm">
+        @if (filterForm.controls.price) {
+            <div>
+                <h4 class="filter-title">Price</h4>
+                <coal-range-selector
+                    formControlName="price"
+                    [step]="priceStep"
+                ></coal-range-selector>
+            </div>
         }
-    </ul>
-</form>
+        <ul formArrayName="categories">
+            @for (
+                categoryGroup of categoriesFormArray.controls;
+                track $index;
+                let i = $index
+            ) {
+                <ng-container [formGroupName]="i">
+                    <h4 class="filter-title">
+                        {{ categoryGroup.get("title")?.value }}
+                    </h4>
+                    <ul formArrayName="filters">
+                        @for (
+                            filterGroup of getFiltersFormArray(i).controls;
+                            track $index;
+                            let j = $index
+                        ) {
+                            <li [formGroupName]="j">
+                                <mat-checkbox
+                                    class="filter-checkbox"
+                                    formControlName="checked"
+                                >
+                                    {{ filterGroup.get("title")?.value }}
+                                    <span class="count"
+                                        >({{
+                                            filterGroup.get("count")?.value
+                                        }})</span
+                                    >
+                                </mat-checkbox>
+                            </li>
+                        }
+                    </ul>
+                </ng-container>
+            }
+        </ul>
+    </form>
+}

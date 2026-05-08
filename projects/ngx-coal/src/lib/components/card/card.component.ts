@@ -1,9 +1,16 @@
-import {CommonModule} from '@angular/common';
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {BehaviorSubject, delayWhen, interval, map, of, pairwise, startWith} from 'rxjs';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+    BehaviorSubject,
+    delayWhen,
+    interval,
+    map,
+    of,
+    pairwise,
+    startWith,
+} from 'rxjs';
 
-import {MaterialModule} from '../../shared/material.module';
+import { MaterialModule } from '../../shared/material.module';
 
 export enum CardStatus {
     Idle = 'iddle',
@@ -14,7 +21,7 @@ export enum CardStatus {
 }
 
 @Component({
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule],
+    imports: [FormsModule, ReactiveFormsModule, MaterialModule],
     selector: 'coal-card',
     templateUrl: './card.component.html',
     styleUrls: ['./card.component.scss'],
@@ -38,7 +45,10 @@ export class CardComponent implements OnInit {
                 startWith(CardStatus.Idle),
                 pairwise(),
                 delayWhen(([previousStatus]) =>
-                    previousStatus === CardStatus.Succeeded || previousStatus === CardStatus.Failed ? interval(2000) : of(undefined),
+                    previousStatus === CardStatus.Succeeded ||
+                    previousStatus === CardStatus.Failed
+                        ? interval(2000)
+                        : of(undefined),
                 ),
                 map(([, currentStatus]) => currentStatus),
             )

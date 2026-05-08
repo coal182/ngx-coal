@@ -1,6 +1,10 @@
 <div class="rating">
     @for (star of stars; track $index; let i = $index) {
-        <button mat-icon-button (click)="selectRating(star)" [attr.data-test]="'star-' + (i + 1)">
+        <button
+            mat-icon-button
+            (click)="selectRating(star)"
+            [attr.data-test]="'star-' + (i + 1)"
+        >
             <mat-icon fontIcon="star" [class.filled]="star.active"></mat-icon>
         </button>
     }
@@ -9,5 +13,7 @@
         <mat-icon fontIcon="close"></mat-icon>
     </button>
 
-    <mat-error *ngIf="showError">{{ errorMsg }}</mat-error>
+    @if (showError) {
+        <mat-error>{{ errorMsg }}</mat-error>
+    }
 </div>

@@ -1,5 +1,4 @@
-import {CommonModule} from '@angular/common';
-import {Component, Input, forwardRef} from '@angular/core';
+import { Component, Input, forwardRef } from '@angular/core';
 import {
     ControlValueAccessor,
     FormControl,
@@ -11,10 +10,10 @@ import {
     ValidationErrors,
     Validator,
 } from '@angular/forms';
-import {debounceTime} from 'rxjs';
+import { debounceTime } from 'rxjs';
 
-import {MaterialModule} from '../../shared/material.module';
-import {Nullable, OnChangeFn, noop} from '../../shared/utils';
+import { MaterialModule } from '../../shared/material.module';
+import { Nullable, OnChangeFn, noop } from '../../shared/utils';
 
 export interface NumberRange {
     from: number;
@@ -22,7 +21,7 @@ export interface NumberRange {
 }
 
 @Component({
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule],
+    imports: [FormsModule, ReactiveFormsModule, MaterialModule],
     selector: 'coal-range-selector',
     templateUrl: './range-selector.component.html',
     styleUrl: './range-selector.component.scss',
@@ -60,9 +59,11 @@ export class RangeSelectorComponent implements ControlValueAccessor, Validator {
         }
         this.rangeForm.patchValue(value);
 
-        this.rangeForm.valueChanges.pipe(debounceTime(500)).subscribe((changes) => {
-            this.onChange(changes);
-        });
+        this.rangeForm.valueChanges
+            .pipe(debounceTime(500))
+            .subscribe((changes) => {
+                this.onChange(changes);
+            });
     }
     registerOnChange(fn: OnChangeFn<Partial<Nullable<NumberRange>>>): void {
         this.onChange = fn;
@@ -73,10 +74,10 @@ export class RangeSelectorComponent implements ControlValueAccessor, Validator {
 
     validate(): ValidationErrors | null {
         if (!this.rangeForm.value.from || !this.rangeForm.value.to) {
-            return {someRangeElementUndefined: true};
+            return { someRangeElementUndefined: true };
         }
         if (this.rangeForm.value.from > this.rangeForm.value.to) {
-            return {fromGreaterThanTo: true};
+            return { fromGreaterThanTo: true };
         }
         return null;
     }

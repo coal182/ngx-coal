@@ -1,10 +1,14 @@
-import {CommonModule} from '@angular/common';
-import {Component, Optional, Self} from '@angular/core';
-import {ControlValueAccessor, FormsModule, NgControl, ReactiveFormsModule} from '@angular/forms';
-import {noop} from 'rxjs';
+import { Component, Optional, Self } from '@angular/core';
+import {
+    ControlValueAccessor,
+    FormsModule,
+    NgControl,
+    ReactiveFormsModule,
+} from '@angular/forms';
+import { noop } from 'rxjs';
 
-import {MaterialModule} from '../../shared/material.module';
-import {NoOp, OnChangeFn} from '../../shared/utils';
+import { MaterialModule } from '../../shared/material.module';
+import { NoOp, OnChangeFn } from '../../shared/utils';
 
 type Rating = number;
 
@@ -14,7 +18,7 @@ export interface RatingStar {
 }
 
 @Component({
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule],
+    imports: [FormsModule, ReactiveFormsModule, MaterialModule],
     selector: 'coal-star-rating',
     templateUrl: 'star-rating.component.html',
     styleUrls: ['star-rating.component.css'],
@@ -38,7 +42,7 @@ export class StarRatingComponent implements ControlValueAccessor {
             return false;
         }
 
-        const {dirty, touched} = this.control;
+        const { dirty, touched } = this.control;
 
         return this.invalid ? (dirty ?? false) || (touched ?? false) : false;
     }
@@ -53,11 +57,11 @@ export class StarRatingComponent implements ControlValueAccessor {
     }
 
     public stars: Array<RatingStar> = [
-        {rating: 1, active: false},
-        {rating: 2, active: false},
-        {rating: 3, active: false},
-        {rating: 4, active: false},
-        {rating: 5, active: false},
+        { rating: 1, active: false },
+        { rating: 2, active: false },
+        { rating: 3, active: false },
+        { rating: 4, active: false },
+        { rating: 5, active: false },
     ];
 
     public constructor(@Self() @Optional() private control: NgControl) {
@@ -68,7 +72,7 @@ export class StarRatingComponent implements ControlValueAccessor {
         if (!data) {
             this.resetRating();
         }
-        this.renderStars({active: true, rating: data});
+        this.renderStars({ active: true, rating: data });
         this.rating = data;
     }
 
@@ -100,7 +104,7 @@ export class StarRatingComponent implements ControlValueAccessor {
 
     public resetRating(): void {
         this.rating = 0;
-        this.stars = this.stars.map((star) => ({...star, active: false}));
+        this.stars = this.stars.map((star) => ({ ...star, active: false }));
         this.onTouched();
         this.onChange(this.rating);
     }

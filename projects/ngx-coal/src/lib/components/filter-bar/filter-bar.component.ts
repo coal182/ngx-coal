@@ -1,18 +1,38 @@
-import {CommonModule} from '@angular/common';
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Subscription, takeUntil} from 'rxjs';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    Output,
+} from '@angular/core';
+import {
+    FormArray,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+    Validators,
+} from '@angular/forms';
+import { Subscription, takeUntil } from 'rxjs';
 
-import {MaterialModule} from '../../shared/material.module';
-import {DestroyNotificatorSubject} from '../../shared/utils';
-import {NumberRange, RangeSelectorComponent} from '../range-selector/range-selector.component';
+import { MaterialModule } from '../../shared/material.module';
+import { DestroyNotificatorSubject } from '../../shared/utils';
+import {
+    NumberRange,
+    RangeSelectorComponent,
+} from '../range-selector/range-selector.component';
 
 export interface ResultWithFilterableFields {
     title: string;
     filterableFields: Record<string, string | number>;
 }
 
-type FilterForm = FormGroup<{categories: FormArray<FormGroup<FilterCategoryForm>>; price?: FormControl<FilterRange>}>;
+type FilterForm = FormGroup<{
+    categories: FormArray<FormGroup<FilterCategoryForm>>;
+    price?: FormControl<FilterRange>;
+}>;
 
 interface FilterCategory {
     title: string;
@@ -54,7 +74,12 @@ export interface Selection {
 }
 
 @Component({
-    imports: [RangeSelectorComponent, CommonModule, FormsModule, ReactiveFormsModule, MaterialModule],
+    imports: [
+        RangeSelectorComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        MaterialModule,
+    ],
     selector: 'coal-filter-bar',
     templateUrl: './filter-bar.component.html',
     styleUrls: ['./filter-bar.component.scss'],
@@ -62,14 +87,17 @@ export interface Selection {
 })
 export class FilterBarComponent implements OnDestroy {
     private valueChangesCategoriesSubscriptions: Array<Subscription> = [];
-    private _resultsWithFilterableFields: ReadonlyArray<ResultWithFilterableFields> = [];
+    private _resultsWithFilterableFields: ReadonlyArray<ResultWithFilterableFields> =
+        [];
     private onDestroy$ = new DestroyNotificatorSubject();
     public filterForm: FilterForm;
-    public currentSelection: Selection = {categories: [], price: null};
+    public currentSelection: Selection = { categories: [], price: null };
     public priceStep = 500;
 
     @Input()
-    public set resultsWithFilterableFields(value: ReadonlyArray<ResultWithFilterableFields>) {
+    public set resultsWithFilterableFields(
+        value: ReadonlyArray<ResultWithFilterableFields>,
+    ) {
         if (value && this._resultsWithFilterableFields.length === 0) {
             this._resultsWithFilterableFields = value;
             this.initializeForm();
@@ -84,7 +112,9 @@ export class FilterBarComponent implements OnDestroy {
     }
 
     public getFiltersFormArray(categoryIndex: number): FormArray {
-        return this.categoriesFormArray.at(categoryIndex).get('filters') as FormArray;
+        return this.categoriesFormArray
+            .at(categoryIndex)
+            .get('filters') as FormArray;
     }
 
     public constructor(private fb: FormBuilder) {}
@@ -94,11 +124,13 @@ export class FilterBarComponent implements OnDestroy {
     }
 
     public onChange(): void {
-        const price = this.filterForm.controls.price?.valid ? this.filterForm.controls.price.value : null;
+        const price = this.filterForm.controls.price?.valid
+            ? this.filterForm.controls.price.value
+            : null;
 
         this.currentSelection = {
             categories: this.getCategoriesSelection(),
-            ...(price && {price}),
+            ...(price && { price }),
         };
 
         this.filtersSelection.emit(this.currentSelection);
@@ -112,16 +144,25 @@ export class FilterBarComponent implements OnDestroy {
 
     private initializeForm(): void {
         this.filterForm = this.fb.group({
-            categories: this.fb.array(this.buildFilterCategories().map((category) => this.createCategoryGroup(category))),
+            categories: this.fb.array(
+                this.buildFilterCategories().map((category) =>
+                    this.createCategoryGroup(category),
+                ),
+            ),
             ...(this.isPriceInFilters() && {
-                price: new FormControl(this.buildPriceFilter(), {nonNullable: true, validators: [Validators.min(0), Validators.max(1000)]}),
+                price: new FormControl(this.buildPriceFilter(), {
+                    nonNullable: true,
+                    validators: [Validators.min(0), Validators.max(1000)],
+                }),
             }),
         });
 
         if (this.isPriceInFilters()) {
-            this.filterForm.controls.price!.valueChanges.pipe(takeUntil(this.onDestroy$)).subscribe(() => {
-                this.onChange();
-            });
+            this.filterForm.controls
+                .price!.valueChanges.pipe(takeUntil(this.onDestroy$))
+                .subscribe(() => {
+                    this.onChange();
+                });
         }
 
         this.subscribeToFormChanges();
@@ -129,13 +170,21 @@ export class FilterBarComponent implements OnDestroy {
 
     private refreshForm(): void {
         this.unsubscribeFromFormChanges();
-        const categoriesArray = this.buildFilterCategories().map((category) => this.createCategoryGroup(category));
+        const categoriesArray = this.buildFilterCategories().map((category) =>
+            this.createCategoryGroup(category),
+        );
         (this.filterForm as FormGroup).removeControl('categories');
-        this.filterForm.addControl('categories', this.fb.array(categoriesArray));
+        this.filterForm.addControl(
+            'categories',
+            this.fb.array(categoriesArray),
+        );
         this.subscribeToFormChanges();
     }
 
-    private filterResultsPerCategory(results: ReadonlyArray<ResultWithFilterableFields>, category: string): ReadonlyArray<ResultWithFilterableFields> {
+    private filterResultsPerCategory(
+        results: ReadonlyArray<ResultWithFilterableFields>,
+        category: string,
+    ): ReadonlyArray<ResultWithFilterableFields> {
         const selectedCategories = this.currentSelection.categories;
         if (selectedCategories.length) {
             const filteredResults = results.filter((result) => {
@@ -143,7 +192,11 @@ export class FilterBarComponent implements OnDestroy {
                     return (
                         filter.category === category ||
                         !filter.selection.length ||
-                        filter.selection.includes(result.filterableFields[filter.category as keyof ResultWithFilterableFields])
+                        filter.selection.includes(
+                            result.filterableFields[
+                                filter.category as keyof ResultWithFilterableFields
+                            ],
+                        )
                     );
                 });
             });
@@ -152,41 +205,70 @@ export class FilterBarComponent implements OnDestroy {
         return results;
     }
 
-    private getFilterableFields(results: ReadonlyArray<ResultWithFilterableFields>): ReadonlyArray<string> {
-        return [...new Set(...results.map((result) => Object.keys(result.filterableFields)))].filter((field) => field !== 'price');
+    private getFilterableFields(
+        results: ReadonlyArray<ResultWithFilterableFields>,
+    ): ReadonlyArray<string> {
+        return [
+            ...new Set(
+                ...results.map((result) =>
+                    Object.keys(result.filterableFields),
+                ),
+            ),
+        ].filter((field) => field !== 'price');
     }
 
     private buildPriceFilter(): NumberRange {
-        const prices: ReadonlyArray<number> = this._resultsWithFilterableFields.map((result) => result.filterableFields['price'] as number);
+        const prices: ReadonlyArray<number> =
+            this._resultsWithFilterableFields.map(
+                (result) => result.filterableFields['price'] as number,
+            );
 
-        return {from: Math.min(...prices), to: Math.max(...prices)};
+        return { from: Math.min(...prices), to: Math.max(...prices) };
     }
 
     private buildFilterCategories(): ReadonlyArray<FilterCategory> {
-        return this.getFilterableFields(this._resultsWithFilterableFields).reduce<ReadonlyArray<FilterCategory>>((categories, availableCategory) => {
-            return [
-                ...categories,
-                {
-                    title: availableCategory,
-                    value: availableCategory,
-                    filters: this.buildFiltersPerCategory(availableCategory, this._resultsWithFilterableFields),
-                },
-            ];
-        }, []);
+        return this.getFilterableFields(
+            this._resultsWithFilterableFields,
+        ).reduce<ReadonlyArray<FilterCategory>>(
+            (categories, availableCategory) => {
+                return [
+                    ...categories,
+                    {
+                        title: availableCategory,
+                        value: availableCategory,
+                        filters: this.buildFiltersPerCategory(
+                            availableCategory,
+                            this._resultsWithFilterableFields,
+                        ),
+                    },
+                ];
+            },
+            [],
+        );
     }
 
-    private buildFiltersPerCategory(filterCategory: string, results: ReadonlyArray<ResultWithFilterableFields>): ReadonlyArray<FilterOption> {
+    private buildFiltersPerCategory(
+        filterCategory: string,
+        results: ReadonlyArray<ResultWithFilterableFields>,
+    ): ReadonlyArray<FilterOption> {
         const filterOptions: Map<string, FilterOption> = new Map();
 
         this.filterResultsPerCategory(results, filterCategory)
             .map((result) => result.filterableFields[filterCategory])
             .forEach((filterCategoryValue) => {
-                const existingFilter = filterOptions.get(filterCategoryValue.toString());
+                const existingFilter = filterOptions.get(
+                    filterCategoryValue.toString(),
+                );
                 if (existingFilter) {
-                    filterOptions.set(filterCategoryValue.toString(), {...existingFilter, count: existingFilter.count + 1});
+                    filterOptions.set(filterCategoryValue.toString(), {
+                        ...existingFilter,
+                        count: existingFilter.count + 1,
+                    });
                 } else {
                     const isChecked = this.currentSelection.categories.find(
-                        (selection) => selection.category === filterCategory && selection.selection.includes(filterCategoryValue),
+                        (selection) =>
+                            selection.category === filterCategory &&
+                            selection.selection.includes(filterCategoryValue),
                     );
                     filterOptions.set(filterCategoryValue.toString(), {
                         title: filterCategoryValue.toString(),
@@ -197,63 +279,87 @@ export class FilterBarComponent implements OnDestroy {
                 }
             });
 
-        return Array.from(filterOptions.values()).sort((a, b) => b.count - a.count);
+        return Array.from(filterOptions.values()).sort(
+            (a, b) => b.count - a.count,
+        );
     }
 
-    private createCategoryGroup(category: FilterCategory): FormGroup<FilterCategoryForm> {
+    private createCategoryGroup(
+        category: FilterCategory,
+    ): FormGroup<FilterCategoryForm> {
         if (category.title === 'price') {
             return this.fb.group<FilterCategoryForm>({
-                title: this.fb.control(category.title, {nonNullable: true}),
-                filters: this.fb.array(category.filters.map((filter) => this.createFilterGroup(filter))),
+                title: this.fb.control(category.title, { nonNullable: true }),
+                filters: this.fb.array(
+                    category.filters.map((filter) =>
+                        this.createFilterGroup(filter),
+                    ),
+                ),
             });
         }
 
         return this.fb.group<FilterCategoryForm>({
-            title: this.fb.control(category.title, {nonNullable: true}),
-            filters: this.fb.array(category.filters.map((filter) => this.createFilterGroup(filter))),
+            title: this.fb.control(category.title, { nonNullable: true }),
+            filters: this.fb.array(
+                category.filters.map((filter) =>
+                    this.createFilterGroup(filter),
+                ),
+            ),
         });
     }
 
-    private createFilterGroup(filter: FilterOption): FormGroup<FilterOptionForm> {
+    private createFilterGroup(
+        filter: FilterOption,
+    ): FormGroup<FilterOptionForm> {
         return this.fb.group({
-            title: this.fb.control(filter.title, {nonNullable: true}),
-            value: this.fb.control(filter.value, {nonNullable: true}),
-            count: this.fb.control(filter.count, {nonNullable: true}),
-            checked: this.fb.control(filter.checked, {nonNullable: true}),
+            title: this.fb.control(filter.title, { nonNullable: true }),
+            value: this.fb.control(filter.value, { nonNullable: true }),
+            count: this.fb.control(filter.count, { nonNullable: true }),
+            checked: this.fb.control(filter.checked, { nonNullable: true }),
         });
     }
 
     private subscribeToFormChanges(): void {
         this.categoriesFormArray.controls.forEach((filterCategory) => {
             this.valueChangesCategoriesSubscriptions.push(
-                filterCategory.valueChanges.pipe(takeUntil(this.onDestroy$)).subscribe(() => {
-                    this.onChange();
-                }),
+                filterCategory.valueChanges
+                    .pipe(takeUntil(this.onDestroy$))
+                    .subscribe(() => {
+                        this.onChange();
+                    }),
             );
         });
     }
 
     private unsubscribeFromFormChanges(): void {
         if (this.valueChangesCategoriesSubscriptions.length) {
-            this.valueChangesCategoriesSubscriptions.forEach((categorySubscription) => {
-                categorySubscription.unsubscribe();
-            });
+            this.valueChangesCategoriesSubscriptions.forEach(
+                (categorySubscription) => {
+                    categorySubscription.unsubscribe();
+                },
+            );
             this.valueChangesCategoriesSubscriptions = [];
         }
     }
 
     private getCategoriesSelection(): ReadonlyArray<SelectedFilters> {
-        return this.filterForm.getRawValue().categories.reduce<ReadonlyArray<SelectedFilters>>((acc, currentFilterCategory) => {
-            const checkedFilters = currentFilterCategory.filters.filter((filter) => filter.checked).map((filter) => filter.value);
-            const selection: SelectedFilters = {
-                category: currentFilterCategory.title,
-                selection: checkedFilters,
-            };
-            if (checkedFilters.length) {
-                return [...acc, selection];
-            }
-            return acc;
-        }, []);
+        return this.filterForm
+            .getRawValue()
+            .categories.reduce<
+                ReadonlyArray<SelectedFilters>
+            >((acc, currentFilterCategory) => {
+                const checkedFilters = currentFilterCategory.filters
+                    .filter((filter) => filter.checked)
+                    .map((filter) => filter.value);
+                const selection: SelectedFilters = {
+                    category: currentFilterCategory.title,
+                    selection: checkedFilters,
+                };
+                if (checkedFilters.length) {
+                    return [...acc, selection];
+                }
+                return acc;
+            }, []);
     }
 
     private isPriceInFilters(): boolean {

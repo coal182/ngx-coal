@@ -10,17 +10,35 @@
     <mat-card-content>
         <ng-content></ng-content>
     </mat-card-content>
-    <ng-container *ngIf="showButtons">
+    @if (showButtons) {
         <br />
         <mat-divider></mat-divider>
         <mat-card-actions>
-            <button mat-button (click)="reset()" [disabled]="status === 'invalid'">Reset</button>
-            <button mat-button (click)="save()" [disabled]="status === 'invalid'">Save</button>
-            <mat-icon fontIcon="check" *ngIf="status === 'succeeded'"></mat-icon>
-            <mat-icon fontIcon="error" *ngIf="status === 'failed'"></mat-icon>
+            <button
+                mat-button
+                (click)="reset()"
+                [disabled]="status === 'invalid'"
+            >
+                Reset
+            </button>
+            <button
+                mat-button
+                (click)="save()"
+                [disabled]="status === 'invalid'"
+            >
+                Save
+            </button>
+            @if (status === "succeeded") {
+                <mat-icon fontIcon="check"></mat-icon>
+            }
+            @if (status === "failed") {
+                <mat-icon fontIcon="error"></mat-icon>
+            }
         </mat-card-actions>
-        <mat-card-footer *ngIf="status === 'saving'">
-            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-        </mat-card-footer>
-    </ng-container>
+        @if (status === "saving") {
+            <mat-card-footer>
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </mat-card-footer>
+        }
+    }
 </mat-card>
