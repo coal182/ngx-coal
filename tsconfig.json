@@ -27,7 +27,7 @@
     },
     "declaration": false,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
@@ -42,10 +42,6 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
-    "fullTemplateTypeCheck": true,
-    "skipTemplateCodegen": true,
     "annotateForClosureCompiler": false,
-    "strictMetadataEmit": true,
-    "enableIvy": true
   }
 }
